@@ -75,13 +75,24 @@ git pull
 bash install.sh   # or .\install.ps1 on Windows
 ```
 
+## GitHub Copilot Support
+
+This repo also includes instructions for GitHub Copilot users. To use with Copilot:
+
+1. Copy `copilot/copilot-instructions.md` into your WordPress project as `.github/copilot-instructions.md`
+2. Copilot will automatically use it as context when you ask about BC integration
+
+**Note:** The Copilot version provides the full spec knowledge and diagnostic patterns, but does not include the shared knowledge base or auto-detection features available in the Claude Code agent.
+
 ## Structure
 
 ```
 bc-support-agent/
   agents/
-    bc-support.md    # The agent definition
-  install.sh         # Bash installer
-  install.ps1        # PowerShell installer
-  README.md          # This file
+    bc-support.md                  # Claude Code agent definition
+  copilot/
+    copilot-instructions.md        # GitHub Copilot instructions
+  install.sh                       # Bash installer (Claude Code)
+  install.ps1                      # PowerShell installer (Claude Code)
+  README.md                        # This file
 ```
