@@ -1,98 +1,93 @@
 # BC Support Agent
 
-A Claude Code agent for diagnosing and resolving Business Central (BC) integration issues in WooCommerce projects using the Auzilium API layer.
+An AI agent for diagnosing and resolving Business Central (BC) integration issues in WooCommerce projects using the Auzilium API layer. Works with **GitHub Agent Mode** and **Claude Code**.
 
 ## What it does
 
-- Detects BC integration plugins in any WordPress project
 - Diagnoses price sync, stock sync, customer sync, order push, and API auth issues
 - Answers questions about the BC integration spec (B2B/B2C orders, customer prices, registration)
-- Maintains a shared knowledge base of past issues across all projects
-- Pattern-matches new issues against past fixes — recurring problems get instant answers
+- Provides exact fix steps with file paths, code snippets, and SQL queries
+- Covers the full Auzilium API surface: items, customers, salesOrders, GetPrices
 
-## Requirements
+## Usage
 
-- [Claude Code CLI](https://docs.anthropic.com/en/docs/claude-code) installed and configured
-- WordPress/WooCommerce project with a BC integration plugin (Auzilium-based)
+### GitHub Agent Mode (recommended for quick questions)
 
-## Installation
+1. Go to [github.com](https://github.com) and open the Agent mode
+2. Select the **bc-support-agent** repo from the repository picker
+3. Also select your **WordPress project repo** if you need code-level diagnosis
+4. Ask your question — the agent has full BC spec knowledge built in
 
-### macOS / Linux / Git Bash on Windows
+Examples:
+```
+Prices aren't syncing from BC for some products
+How does the B2B vs B2C order flow work?
+Customer is getting wrong customer prices after login
+Why would a B2C order post with the wrong customer number?
+```
 
+### Claude Code (full features)
+
+For the full experience with auto-detection, shared knowledge base, and issue logging:
+
+**macOS / Linux / Git Bash:**
 ```bash
-git clone <repo-url> bc-support-agent
+git clone https://github.com/maliknarayan/bc-support-agent.git
 cd bc-support-agent
 bash install.sh
 ```
 
-### Windows (PowerShell)
-
+**Windows PowerShell:**
 ```powershell
-git clone <repo-url> bc-support-agent
+git clone https://github.com/maliknarayan/bc-support-agent.git
 cd bc-support-agent
 .\install.ps1
 ```
 
-### Manual install
+**Manual:** Copy `agents/bc-support.md` to `~/.claude/agents/bc-support.md`
 
-Copy `agents/bc-support.md` to `~/.claude/agents/bc-support.md`.
+Then navigate to any WordPress project with a BC plugin and use Claude Code normally.
 
-## Usage
+### Copy to your own project (optional)
 
-Navigate to any WordPress project with a BC integration plugin and use Claude Code:
-
-```
-# Diagnose an issue
-> Prices aren't syncing from BC for some products
-
-# Ask about the spec
-> How does the B2B vs B2C order flow work?
-
-# Log a past issue
-> Log this — last week we had a stock sync failure because API credentials expired
+If you want BC knowledge available directly in your WordPress project repo:
+```bash
+cp .github/copilot-instructions.md /path/to/your-wp-project/.github/copilot-instructions.md
 ```
 
-The agent will:
-1. Auto-detect the project and BC plugin
-2. Check the shared knowledge base for matching past issues
-3. Diagnose, answer, or log — depending on the input
-4. Save bug/error findings to the shared knowledge base for future reference
+This works with GitHub Agent Mode, Copilot Chat in VS Code, and any tool that reads `.github/copilot-instructions.md`.
 
-## Knowledge Base
+## Feature Comparison
 
-All diagnosed issues are saved to `~/.claude/bc-support/issues/` and shared across projects. This means:
-- A fix discovered on Project A is instantly available when the same issue hits Project B
-- Recurring issues are flagged automatically
-- The agent gets smarter over time as more issues are logged
+| Feature | GitHub Agent Mode | Claude Code |
+|---------|:-:|:-:|
+| BC spec knowledge | Yes | Yes |
+| Diagnostic patterns | Yes | Yes |
+| API debugging guide | Yes | Yes |
+| Auto-detect BC plugin | — | Yes |
+| Shared knowledge base | — | Yes |
+| Issue logging & recall | — | Yes |
+| Cross-project pattern matching | — | Yes |
 
 ## Updating
-
-Pull the latest version and re-run the install script:
 
 ```bash
 cd bc-support-agent
 git pull
-bash install.sh   # or .\install.ps1 on Windows
+bash install.sh   # re-run only if using Claude Code
 ```
-
-## GitHub Copilot Support
-
-This repo also includes instructions for GitHub Copilot users. To use with Copilot:
-
-1. Copy `copilot/copilot-instructions.md` into your WordPress project as `.github/copilot-instructions.md`
-2. Copilot will automatically use it as context when you ask about BC integration
-
-**Note:** The Copilot version provides the full spec knowledge and diagnostic patterns, but does not include the shared knowledge base or auto-detection features available in the Claude Code agent.
 
 ## Structure
 
 ```
 bc-support-agent/
+  .github/
+    copilot-instructions.md    # GitHub Agent Mode / Copilot instructions
   agents/
-    bc-support.md                  # Claude Code agent definition
+    bc-support.md              # Claude Code agent definition
   copilot/
-    copilot-instructions.md        # GitHub Copilot instructions
-  install.sh                       # Bash installer (Claude Code)
-  install.ps1                      # PowerShell installer (Claude Code)
-  README.md                        # This file
+    copilot-instructions.md    # Standalone copy for embedding in other repos
+  install.sh                   # Bash installer (Claude Code)
+  install.ps1                  # PowerShell installer (Claude Code)
+  README.md
 ```
